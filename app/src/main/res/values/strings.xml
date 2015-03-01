@@ -47,5 +47,5 @@
     <string name="add_info">Add Description:</string>
     <string name="add_title">Add Title:</string>
     <string name="title_activity_view_comments">ViewComment</string>
-
+    <string name="comments">Comments:</string>
 </resources>

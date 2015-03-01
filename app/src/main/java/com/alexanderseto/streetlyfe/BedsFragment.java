@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class BedsFragment extends BathroomFragment {
-    private String category = "Beds";
+
+    public String category = "Beds";
 
 }

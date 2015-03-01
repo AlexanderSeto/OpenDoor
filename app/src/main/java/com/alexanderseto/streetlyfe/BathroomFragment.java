@@ -3,12 +3,19 @@ package com.alexanderseto.streetlyfe;
 import android.app.Fragment;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.alexanderseto.streetlyfe.MainActivity;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -27,7 +34,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
+//import com.google.android.gms.l
 import android.app.FragmentManager;
 
 import java.util.List;
@@ -35,12 +42,15 @@ import java.util.List;
 
 public class BathroomFragment extends Fragment {
 
-    private String category = "Bathrooms";
+    public String category = "Bathrooms";
+
+
+
     MapView mMapView;
     private GoogleMap googleMap;
 
 
-    public LatLng userLocation;
+    public static LatLng userLocation;
     public LatLng locationGet(){
         return userLocation;
     }
@@ -71,60 +81,66 @@ public class BathroomFragment extends Fragment {
         double longitude = 10.486671;
 
 
-        googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener(){
+        googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
-            public void onMyLocationChange(Location location){
+            public void onMyLocationChange(Location location) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 userLocation = new LatLng(latitude, longitude);
             }
         });
 
+        if (userLocation!=null){
+            ParseQuery<ParseObject> locationQuery = ParseQuery.getQuery("Waypoint");
+            locationQuery.whereEqualTo("category", category);
+            locationQuery.whereNear("location", new ParseGeoPoint(locationGet().latitude, locationGet().longitude));
+            locationQuery.setLimit(10);
+            locationQuery.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> parseObjects, ParseException e) {
+                    for (ParseObject parseObject : parseObjects) {
+                        Marker marker = googleMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(parseObject.getParseGeoPoint("location").getLatitude(),
+                                                parseObject.getParseGeoPoint("location").getLongitude()))
+                                        .title(parseObject.getString("title"))
+                                        .snippet(parseObject.getString("category"))
 
-
-        ParseQuery<ParseObject> locationQuery = ParseQuery.getQuery("Waypoint");
-        locationQuery.whereEqualTo("category", category);
-        locationQuery.whereNear("location",new ParseGeoPoint(locationGet().latitude, locationGet().longitude));
-        locationQuery.setLimit(10);
-        locationQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                for(ParseObject parseObject : parseObjects) {
-                    Marker marker = googleMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(parseObject.getParseGeoPoint("location").getLatitude(),
-                                            parseObject.getParseGeoPoint("location").getLongitude()))
-                                    .title(parseObject.getString("title"))
-                                    .snippet(parseObject.getString("category"))
-
-                    );
-                }
-            }
-        });
-
-
-
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
-            @Override
-            public boolean onMarkerClick(final Marker marker){
-//                String temp = marker.getTitle();
-                ParseGeoPoint temp = new ParseGeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
-                ParseQuery<ParseObject> singleLocationQuery = ParseQuery.getQuery("Waypoint");
-                singleLocationQuery.whereEqualTo("coordinates", temp);
-                singleLocationQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-                    @Override
-                    public void done(ParseObject parseObject, ParseException e) {
-
-                        Intent intent = new Intent(getActivity().getApplicationContext(), ViewComments.class);
-                        intent.putExtra("postID", parseObject.getObjectId());
-
-                        startActivity(intent);
+                        );
                     }
-                });
+                }
+            });
 
-                return true;
-            }
-        });
 
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(final Marker marker) {
+                    //                String temp = marker.getTitle();
+
+                    ParseGeoPoint temp = new ParseGeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
+                    ParseQuery<ParseObject> singleLocationQuery = ParseQuery.getQuery("Waypoint");
+                    singleLocationQuery.whereNear("location", temp);
+                    singleLocationQuery.setLimit(1);
+                    singleLocationQuery.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> parseObjects, ParseException e) {
+                            Intent intent = new Intent(getActivity().getApplicationContext(), ViewComments.class);
+                            intent.putExtra("postID", parseObjects.get(0).getObjectId());
+
+                            getActivity().startActivity(intent);
+                        }
+                    });
+//                    singleLocationQuery
+
+                    return true;
+                }
+            });
+
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(this.locationGet()).zoom(12).build();
+        googleMap.moveCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+        }
 
         // create marker
 //        MarkerOptions marker = new MarkerOptions().position(
@@ -243,4 +259,7 @@ public class BathroomFragment extends Fragment {
 //            mMap = null;
 //        }
 //    }
+public void setString(String cat) {
+    category = cat;
+}
 }

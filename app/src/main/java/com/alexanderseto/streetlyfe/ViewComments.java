@@ -1,5 +1,6 @@
 package com.alexanderseto.streetlyfe;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,13 +22,22 @@ import java.util.List;
 
 public class ViewComments extends ActionBarActivity {
 
-    String postID = getIntent().getStringExtra("postID");
+    //Bundle extras = getIntent().getExtras();
+
+//        String postID = getIntent().getExtras().getString("postID");
+    String postID="";
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_comment);
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "tkUqqlhmg1yPNJztnBPDRXPZwmeGOV9PDTfpWYIf", "3yWmzU1Whubl5vI9YxFvTFvEIMyYdy7GXdq0GrPE");
+
+        Intent intent = getIntent();
+
+        String postID = intent.getStringExtra("postID");
+
+//        Parse.enableLocalDatastore(this);
+//        Parse.initialize(this, "tkUqqlhmg1yPNJztnBPDRXPZwmeGOV9PDTfpWYIf", "3yWmzU1Whubl5vI9YxFvTFvEIMyYdy7GXdq0GrPE");
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Waypoint");
         query.getInBackground(postID, new GetCallback<ParseObject>() {
             @Override

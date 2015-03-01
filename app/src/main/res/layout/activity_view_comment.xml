@@ -3,7 +3,8 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".ViewInfoScreen">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".ViewInfoScreen"
+    android:background="#27000000">
 
 
     <TextView
@@ -21,9 +22,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="[INFORMATION]"
         android:id="@+id/informationTextView"
-        android:layout_below="@+id/titleTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="98dp" />
+        android:layout_alignTop="@+id/upTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,9 +32,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="[UP]"
         android:id="@+id/upTextView"
+        android:layout_marginTop="34dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginEnd="48dp"
         android:layout_below="@+id/titleTextView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/commentListView"
+        android:layout_alignEnd="@+id/commentListView" />
 
 
     <ListView
@@ -44,6 +48,16 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="148dp">
     </ListView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/comments"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/informationTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="99dp" />
 
 
 </RelativeLayout>

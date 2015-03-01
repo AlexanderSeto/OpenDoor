@@ -7,4 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class WifiFragment extends BathroomFragment {
+    public String category = "WiFi";
+
 }

@@ -7,6 +7,5 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class FoodFragment extends BathroomFragment {
-
-
+    public String category = "Food";
 }
