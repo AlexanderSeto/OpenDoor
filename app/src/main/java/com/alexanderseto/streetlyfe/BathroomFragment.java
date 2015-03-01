@@ -136,11 +136,19 @@ public class BathroomFragment extends Fragment {
             });
 
 
-        CameraPosition cameraPosition = new CameraPosition.Builder()
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(this.locationGet()).zoom(12).build();
-        googleMap.moveCamera(CameraUpdateFactory
+            googleMap.moveCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
+        } else {
+            LatLng latLng = new LatLng(37.348077, -121.939083);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng).zoom(7).build();
+            googleMap.moveCamera(CameraUpdateFactory
+                    .newCameraPosition(cameraPosition));
         }
+
 
         // create marker
 //        MarkerOptions marker = new MarkerOptions().position(

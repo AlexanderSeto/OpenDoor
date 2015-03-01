@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alexanderseto.streetlyfe"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0"
+    android:screenOrientation="portrait">
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -51,6 +52,10 @@
         <activity
             android:name=".ViewComments"
             android:label="@string/title_activity_view_comments" >
+        </activity>
+        <activity
+            android:name=".About"
+            android:label="@string/title_activity_about" >
         </activity>
     </application>
 

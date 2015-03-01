@@ -8,6 +8,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 
 public class AddLocation extends ActionBarActivity {
 
@@ -46,6 +53,21 @@ public class AddLocation extends ActionBarActivity {
         String info = editText.getText().toString();
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         String category = spinner.getSelectedItem().toString();
+        final EditText titleText = (EditText) findViewById(R.id.editText2);
+        String title = titleText.getText().toString();
+        LatLng latLng = BathroomFragment.userLocation;
+        ParseGeoPoint parseGeoPoint = new ParseGeoPoint(latLng.latitude, latLng.longitude);
 
+        ParseObject waypoint = new ParseObject("Waypoint");
+        waypoint.put("information", info);
+        waypoint.put("category", category);
+        waypoint.put("title", title);
+        waypoint.put("location", parseGeoPoint);
+        waypoint.put("upVotes", 0);
+        waypoint.put("downVotes", 0);
+
+        waypoint.saveInBackground();
+
+        finishActivity(1);
     }
 }

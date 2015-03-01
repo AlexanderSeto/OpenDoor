@@ -17,6 +17,7 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ViewComments extends ActionBarActivity {
     //Bundle extras = getIntent().getExtras();
 
 //        String postID = getIntent().getExtras().getString("postID");
-    String postID="";
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class ViewComments extends ActionBarActivity {
                     // Shit's gone down
 
                 }
+
             }
         });
 
@@ -118,4 +120,48 @@ public class ViewComments extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    public void clickUp(View v) {
+        Intent intent = getIntent();
+
+        String postID = intent.getStringExtra("postID");
+
+        TextView upText = (TextView) findViewById(R.id.upTextView);
+        upText.setText(Integer.toString(Integer.parseInt(upText.getText().toString()) + 1));
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Waypoint");
+        query.getInBackground(postID, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+
+
+                parseObject.put("upVotes", parseObject.getInt("upVotes") + 1);
+                parseObject.saveEventually(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+
+                        } else {
+
+                        }
+                    }
+
+
+                });
+            }
+        });
+    }
+//    public void clickDown(View v) {
+//        TextView upText = (TextView) findViewById(R.id.upTextView);
+//        upText.setText(Integer.toString(Integer.parseInt(upText.getText().toString())-1));
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Waypoint");
+//        query.getInBackground(postID, new GetCallback<ParseObject>() {
+//            @Override
+//            public void done(ParseObject parseObject, ParseException e) {
+//                parseObject.put("downVotes", parseObject.getInt("downVotes")+1);
+//                parseObject.saveInBackground(new ca;
+//            }
+//        });
+//    }
+
+
 }
